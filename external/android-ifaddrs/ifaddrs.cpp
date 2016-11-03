@@ -24,6 +24,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#if defined(ANDROID)
 #include "ifaddrs.h"
 #include <stdlib.h>
 #include <string.h>
@@ -218,3 +219,4 @@ void freeifaddrs(struct ifaddrs* addrs) {
     delete last;
   }
 }
+#endif  // defined(ANDROID)

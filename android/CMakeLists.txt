@@ -1,10 +1,7 @@
 cmake_minimum_required(VERSION 3.6)
 
-add_library(pd
-            SHARED
-            IMPORTED)
-set_target_properties(
-  pd PROPERTIES IMPORTED_LOCATION
+add_library(pd SHARED IMPORTED)
+set_target_properties(pd PROPERTIES IMPORTED_LOCATION
   ${CMAKE_CURRENT_LIST_DIR}/../../pd-for-android/PdCore/libs/${ANDROID_ABI}/libpd.so)
 
 include_directories(../../pd-for-android/PdCore/jni/libpd/pure-data/src)
@@ -12,14 +9,11 @@ include_directories(../external/android-ifaddrs)
 include_directories(../external/link/include)
 include_directories(../external/link/modules/asio-standalone/asio/include)
 
-add_library(abl_link_tilde
-            SHARED
-            ../external/android-ifaddrs/ifaddrs.cpp
-            ../external/abl_link_instance.cpp
-            ../external/abl_link~.cpp)
-set_target_properties(abl_link_tilde
-                      PROPERTIES COMPILE_DEFINITIONS
-                      "LINK_PLATFORM_LINUX=1" "PD" "ABL_LINK_OFFSET_MS=23")
+add_library(abl_link_tilde SHARED
+  ../external/android-ifaddrs/ifaddrs.cpp ../external/abl_link_instance.cpp
+  ../external/abl_link~.cpp)
+target_compile_definitions(abl_link_tilde PRIVATE
+  ANDROID=1 LINK_PLATFORM_LINUX=1 PD=1 ABL_LINK_OFFSET_MS=23)
 set(CMAKE_CXX_FLAGS "-std=c++11 -Wno-multichar -fexceptions -Werror")
             
 target_link_libraries(abl_link_tilde pd)
