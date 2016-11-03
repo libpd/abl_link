@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
@@ -33,6 +34,8 @@ import java.util.Arrays;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "AblLinkSample";
+
+    private SeekBar tempoBar;
 
     private PdService pdService = null;
 
@@ -73,8 +76,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void receiveFloat(String source, float x) {
-            pdPost("float: " + x);
+        public void receiveFloat(String source, final float x) {
+            if (source.equals("tempoOut")) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        tempoBar.setProgress((int)x - 70);
+                    }
+                });
+            } else {
+                pdPost("float: " + x);
+            }
         }
 
         @Override
@@ -133,6 +145,18 @@ public class MainActivity extends AppCompatActivity {
                 PdBase.sendFloat("connect", connectBox.isChecked() ? 1 : 0);
             }
         });
+        tempoBar = (SeekBar) findViewById(R.id.tempoBar);
+        tempoBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int value, boolean fromUser) {
+                if (fromUser) {
+                    PdBase.sendFloat("tempo", value + 70.0f);
+                }
+            }
+
+            @Override public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
     }
 
     private void initPd() {
@@ -144,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
             InputStream in = res.openRawResource(R.raw.metronome);
             patchFile = IoUtils.extractResource(in, "metronome.pd", getCacheDir());
             PdBase.openPatch(patchFile);
+            PdBase.subscribe("tempoOut");
             startAudio();
         } catch (IOException e) {
             Log.e(TAG, e.toString());

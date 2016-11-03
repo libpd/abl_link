@@ -16,7 +16,6 @@
 -1 -1;
 #X obj 201 197 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
-#X obj 230 134 print tempo;
 #X msg 18 65 connect \$1;
 #X obj 199 302 print num_peers;
 #X obj 199 280 r #abl_link_num_peers;
@@ -25,6 +24,7 @@
 #X obj 156 41 r resolution;
 #X obj 253 42 r quantum;
 #X obj 18 40 r connect;
+#X obj 230 134 s tempoOut;
 #X connect 0 0 1 1;
 #X connect 1 0 5 0;
 #X connect 3 0 1 0;
@@ -36,18 +36,18 @@
 #X connect 7 0 10 0;
 #X connect 8 0 10 0;
 #X connect 9 0 0 0;
-#X connect 10 0 19 0;
-#X connect 10 3 15 0;
+#X connect 10 0 18 0;
+#X connect 10 3 23 0;
 #X connect 11 0 0 0;
 #X connect 12 0 13 0;
 #X connect 12 1 14 0;
 #X connect 13 0 11 0;
 #X connect 14 0 9 0;
-#X connect 16 0 10 0;
-#X connect 18 0 17 0;
-#X connect 19 0 4 0;
-#X connect 19 1 12 0;
-#X connect 20 0 6 0;
-#X connect 21 0 7 0;
-#X connect 22 0 8 0;
-#X connect 23 0 16 0;
+#X connect 15 0 10 0;
+#X connect 17 0 16 0;
+#X connect 18 0 4 0;
+#X connect 18 1 12 0;
+#X connect 19 0 6 0;
+#X connect 20 0 7 0;
+#X connect 21 0 8 0;
+#X connect 22 0 15 0;
