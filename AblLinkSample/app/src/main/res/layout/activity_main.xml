@@ -27,5 +27,13 @@
             android:layout_height="wrap_content"
             android:id="@+id/tempoBar" />
 
+        <SeekBar
+            style="@style/Widget.AppCompat.SeekBar.Discrete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="5"
+            android:progress="3"
+            android:id="@+id/quantumBar" />
+
     </LinearLayout>
 </RelativeLayout>
