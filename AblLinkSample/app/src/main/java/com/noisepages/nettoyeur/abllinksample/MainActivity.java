@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Resources;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
@@ -13,11 +12,6 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.SeekBar;
 import android.widget.Toast;
-
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.puredata.android.io.AudioParameters;
 import org.puredata.android.service.PdPreferences;
@@ -40,11 +34,6 @@ public class MainActivity extends AppCompatActivity {
     private PdService pdService = null;
 
     private Toast toast = null;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
 
     private void toast(final String msg) {
         runOnUiThread(new Runnable() {
@@ -125,9 +114,6 @@ public class MainActivity extends AppCompatActivity {
         PdPreferences.initPreferences(getApplicationContext());
         initGui();
         bindService(new Intent(this, PdService.class), pdConnection, BIND_AUTO_CREATE);
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -153,7 +139,6 @@ public class MainActivity extends AppCompatActivity {
                     PdBase.sendFloat("tempo", value + 70.0f);
                 }
             }
-
             @Override public void onStartTrackingTouch(SeekBar seekBar) {}
             @Override public void onStopTrackingTouch(SeekBar seekBar) {}
         });
@@ -165,11 +150,8 @@ public class MainActivity extends AppCompatActivity {
                     PdBase.sendFloat("quantum", value + 1);
                 }
             }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
+            @Override public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override public void onStopTrackingTouch(SeekBar seekBar) {}
         });
     }
 
@@ -214,41 +196,5 @@ public class MainActivity extends AppCompatActivity {
             // already unbound
             pdService = null;
         }
-    }
-
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("Main Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        AppIndex.AppIndexApi.start(client, getIndexApiAction());
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.end(client, getIndexApiAction());
-        client.disconnect();
     }
 }
