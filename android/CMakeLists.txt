@@ -5,7 +5,7 @@ add_library(pd
             IMPORTED)
 set_target_properties(
   pd PROPERTIES IMPORTED_LOCATION
-  /Users/brinkmann/Documents/pd-for-android/PdCore/libs/${ANDROID_ABI}/libpd.so)
+  ${CMAKE_CURRENT_LIST_DIR}/../../pd-for-android/PdCore/libs/${ANDROID_ABI}/libpd.so)
 
 include_directories(../../pd-for-android/PdCore/jni/libpd/pure-data/src)
 include_directories(../external/android-ifaddrs)
