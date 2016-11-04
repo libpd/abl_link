@@ -22,10 +22,22 @@
             android:layout_height="wrap_content"
             android:id="@+id/connectBox" />
 
+        <TextView
+            android:text="Tempo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tempoLabel" />
+
         <SeekBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/tempoBar" />
+
+        <TextView
+            android:text="Quantum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/quantumLabel" />
 
         <SeekBar
             style="@style/Widget.AppCompat.SeekBar.Discrete"

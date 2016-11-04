@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "AblLinkSample";
 
-    private SeekBar tempoBar;
+    private SeekBar tempoBar = null;
     private PdService pdService = null;
     private Toast toast = null;
 
