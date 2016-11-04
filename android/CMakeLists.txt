@@ -1,10 +1,12 @@
 cmake_minimum_required(VERSION 3.6)
 
+set(PD_CORE ${CMAKE_CURRENT_LIST_DIR}/../../pd-for-android/PdCore)
+
 add_library(pd SHARED IMPORTED)
 set_target_properties(pd PROPERTIES IMPORTED_LOCATION
-  ${CMAKE_CURRENT_LIST_DIR}/../../pd-for-android/PdCore/libs/${ANDROID_ABI}/libpd.so)
+  ${PD_CORE}/libs/${ANDROID_ABI}/libpd.so)
 
-include_directories(../../pd-for-android/PdCore/jni/libpd/pure-data/src)
+include_directories(${PD_CORE}/jni/libpd/pure-data/src)
 include_directories(../external/android-ifaddrs)
 include_directories(../external/link/include)
 include_directories(../external/link/modules/asio-standalone/asio/include)
