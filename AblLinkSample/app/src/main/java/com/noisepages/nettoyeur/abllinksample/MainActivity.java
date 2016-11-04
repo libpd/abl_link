@@ -43,9 +43,6 @@ public class MainActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (toast == null) {
-                    toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
-                }
                 toast.setText(TAG + ": " + msg);
                 toast.show();
             }
@@ -75,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
         AudioParameters.init(this);
         PdPreferences.initPreferences(getApplicationContext());
         initGui();
