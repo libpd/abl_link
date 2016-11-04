@@ -17,22 +17,20 @@ import org.puredata.android.io.AudioParameters;
 import org.puredata.android.service.PdPreferences;
 import org.puredata.android.service.PdService;
 import org.puredata.core.PdBase;
-import org.puredata.core.PdReceiver;
+import org.puredata.core.PdListener;
 import org.puredata.core.utils.IoUtils;
+import org.puredata.core.utils.PdDispatcher;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "AblLinkSample";
 
     private SeekBar tempoBar;
-
     private PdService pdService = null;
-
     private Toast toast = null;
 
     private void toast(final String msg) {
@@ -48,49 +46,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private PdReceiver receiver = new PdReceiver() {
-
-        private void pdPost(String msg) {
-            toast("Pure Data says, \"" + msg + "\"");
-        }
-
+    private PdDispatcher dispatcher = new PdDispatcher() {
         @Override
         public void print(String s) {
             toast(s);
-        }
-
-        @Override
-        public void receiveBang(String source) {
-            pdPost("bang");
-        }
-
-        @Override
-        public void receiveFloat(String source, final float x) {
-            if (source.equals("tempoOut")) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        tempoBar.setProgress((int)x - 70);
-                    }
-                });
-            } else {
-                pdPost("float: " + x);
-            }
-        }
-
-        @Override
-        public void receiveList(String source, Object... args) {
-            pdPost("list: " + Arrays.toString(args));
-        }
-
-        @Override
-        public void receiveMessage(String source, String symbol, Object... args) {
-            pdPost("message: " + Arrays.toString(args));
-        }
-
-        @Override
-        public void receiveSymbol(String source, String symbol) {
-            pdPost("symbol: " + symbol);
         }
     };
 
@@ -159,11 +118,21 @@ public class MainActivity extends AppCompatActivity {
         Resources res = getResources();
         File patchFile = null;
         try {
-            PdBase.setReceiver(receiver);
+            PdBase.setReceiver(dispatcher);
             PdBase.subscribe("android");
             InputStream in = res.openRawResource(R.raw.metronome);
             patchFile = IoUtils.extractResource(in, "metronome.pd", getCacheDir());
             PdBase.openPatch(patchFile);
+            dispatcher.addListener("tempoOut", new PdListener.Adapter() {
+                @Override public void receiveFloat(String source, final float x) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            tempoBar.setProgress((int)x - 70);
+                        }
+                    });
+                }
+            });
             PdBase.subscribe("tempoOut");
             startAudio();
         } catch (IOException e) {
