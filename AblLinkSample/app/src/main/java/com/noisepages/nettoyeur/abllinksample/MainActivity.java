@@ -133,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
                     });
                 }
             });
-            PdBase.subscribe("tempoOut");
             startAudio();
         } catch (IOException e) {
             Log.e(TAG, e.toString());
