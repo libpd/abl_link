@@ -1,3 +1,9 @@
+/*
+ *  For information on usage and redistribution, and for a DISCLAIMER OF ALL
+ *  WARRANTIES, see the file, LICENSE, in the root of this repository.
+ *
+ */
+
 package com.noisepages.nettoyeur.abllinksample;
 
 import android.content.ComponentName;
