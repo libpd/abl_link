@@ -10,7 +10,7 @@ Users:
 
 Developers:
 
-* Build the external by saying `make` in the `/external` directory and install it like any other external.
+* Build the external by saying `make` in the `external` directory and install it like any other external.
 * Run the metronome patch in `abl_link/external` to check the timing of the external against the LinkHut sample app.
 
 ## Android version
