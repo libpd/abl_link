@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private static final double ctemp = Math.sqrt(20.0 * 999.0);
-    private static final double qtemp = ctemp / 20;
+    private static final double qtemp = ctemp / 20.0;
 
     private double progressToTempo(int progress) {
         return ctemp * Math.pow(qtemp, (progress - 50.0) / 50.0);
