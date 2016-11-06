@@ -12,7 +12,6 @@ While this solution is about using the abl_link~ external with Pd for Android, i
 
 ## What's going on here?
 
-* So far, I've only been able to make this work with android-21 (Android 5.0 Lollipop) or later.
 * Link uses ifaddrs, which is not part of the stable Android APIs. So, I looked around and decided to borrow the implementation of ifaddrs that comes with the Android version of Chromium, which is BSD-licensed and IPv6 aware. It's included here, in `external/android-ifaddrs`.
 * Other than that, it just took a few straightforward compiler flags to make this work. They're in `CMakeLists.txt`.
 * For purposes other than libpd, the build file should be straightforward to adjust. Good luck!
