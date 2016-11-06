@@ -108,13 +108,14 @@ public class MainActivity extends AppCompatActivity {
             @Override public void onStartTrackingTouch(SeekBar seekBar) {}
             @Override public void onStopTrackingTouch(SeekBar seekBar) {}
         });
+        final TextView quantumLabel = (TextView) findViewById(R.id.quantumLabel);
         final SeekBar quantumBar = (SeekBar) findViewById(R.id.quantumBar);
         quantumBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int value, boolean fromUser) {
-                if (fromUser) {
-                    PdBase.sendFloat("quantum", value + 1);
-                }
+                int q = value + 1;
+                PdBase.sendFloat("quantum", q);
+                quantumLabel.setText("Quantum: " + q);
             }
             @Override public void onStartTrackingTouch(SeekBar seekBar) {}
             @Override public void onStopTrackingTouch(SeekBar seekBar) {}
