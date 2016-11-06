@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int value, boolean fromUser) {
                 if (fromUser) {
-                    PdBase.sendFloat("tempo", value + 70.0f);
+                    PdBase.sendFloat("tempo", (float) progressToTempo(value));
                 }
             }
             @Override public void onStartTrackingTouch(SeekBar seekBar) {}
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            tempoBar.setProgress((int)x - 70);
+                            tempoBar.setProgress(tempoToProgress(x));
                         }
                     });
                 }
@@ -168,5 +168,16 @@ public class MainActivity extends AppCompatActivity {
             // already unbound
             pdService = null;
         }
+    }
+
+    private static final double ctemp = Math.sqrt(20.0 * 999.0);
+    private static final double qtemp = ctemp / 20;
+
+    private double progressToTempo(int progress) {
+        return ctemp * Math.pow(qtemp, (progress - 50.0) / 50.0);
+    }
+
+    private int tempoToProgress(float bpm) {
+        return (int) (50.0 + 50 * Math.log(bpm / ctemp) / Math.log(qtemp));
     }
 }
