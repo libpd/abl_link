@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.puredata.android.io.AudioParameters;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "AblLinkSample";
 
+    private TextView tempoLabel = null;
     private SeekBar tempoBar = null;
     private PdService pdService = null;
     private Toast toast = null;
@@ -94,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 PdBase.sendFloat("connect", connectBox.isChecked() ? 1 : 0);
             }
         });
+        tempoLabel = (TextView) findViewById(R.id.tempoLabel);
         tempoBar = (SeekBar) findViewById(R.id.tempoBar);
         tempoBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -132,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            tempoLabel.setText("Tempo: " + (int) (x + 0.5) + "bpm");
                             tempoBar.setProgress(tempoToProgress(x));
                         }
                     });
