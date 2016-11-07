@@ -19,9 +19,11 @@ shared.sources = abl_link_instance.cpp
 # all extra files to be included in binary distribution of the library
 datafiles = abl_link~-help.pd ../LICENSE
 
-LINK_HOME ?= ./link
-cflags = -std=c++11 -I$(LINK_HOME)/include \
-	 -I$(LINK_HOME)/modules/asio-standalone/asio/include -Wno-multichar
+LINK_INCLUDES ?= ./link/include
+ASIO_INCLUDES ?= ./link/modules/asio-standalone/asio/include
+
+cflags = -std=c++11 -I$(LINK_INCLUDE) \
+	 -I$(ASIO_INCLUDES) -Wno-multichar
     
 suppress-wunused = yes
 
