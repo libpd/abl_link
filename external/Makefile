@@ -38,4 +38,5 @@ define forWindows
   cflags += -DLINK_PLATFORM_WINDOWS=1
 endef
 
-include pd-lib-builder/Makefile.pdlibbuilder
+PDLIBBUILDERDIR=pd-lib-builder
+include $(PDLIBBUILDERDIR)/Makefile.pdlibbuilder
