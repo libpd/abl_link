@@ -12,9 +12,7 @@
 
 lib.name = abl_link~
 
-class.sources = abl_link~.cpp
-
-shared.sources = abl_link_instance.cpp
+abl_link~.class.sources = abl_link~.cpp abl_link_instance.cpp
 
 # all extra files to be included in binary distribution of the library
 datafiles = abl_link~-help.pd ../LICENSE
