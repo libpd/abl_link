@@ -1,1 +1,1 @@
-include ':app'
+include ':app', ':pd-core-1.0.3-SNAPSHOT'
