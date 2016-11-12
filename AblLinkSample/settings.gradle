@@ -1,1 +1,2 @@
-include ':app', ':pd-core-1.0.3-SNAPSHOT'
+include ':app', ':PdCore'
+project(':PdCore').projectDir = new File(settingsDir, '../../pd-for-android/PdCore')
