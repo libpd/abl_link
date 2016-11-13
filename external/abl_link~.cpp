@@ -13,7 +13,17 @@
 #include "abl_link_instance.hpp"
 #include "m_pd.h"
 
+// Eyeball estimate for latency compensation: Pd's reported delay (5ms) plus
+// the duration of one Pd buffer (1.4ms at 44.1kHz), rounded up to the next
+// integer.
+// TODO: Come up with a more scientific way of estimating the offset.
+#ifndef ABL_LINK_OFFSET_MS
+#define ABL_LINK_OFFSET_MS 7
+#endif
+
+
 static t_class *abl_link_tilde_class;
+static double abl_link_advance_ms; // use common static advance_ms, allowing any [abl_link~] to change it.
 
 typedef struct _abl_link_tilde {
   t_object obj;
@@ -26,6 +36,7 @@ typedef struct _abl_link_tilde {
   double prev_beat_time;
   double quantum;
   double tempo;
+  //double advance_ms;
   int reset_flag;
   std::shared_ptr<abl_link::AblLinkWrapper> link;
 } t_abl_link_tilde;
@@ -46,7 +57,7 @@ static void abl_link_tilde_dsp(t_abl_link_tilde *x, t_signal **sp) {
 
 static void abl_link_tilde_tick(t_abl_link_tilde *x) {
   std::chrono::microseconds curr_time;
-  auto& timeline = x->link->acquireAudioTimeline(&curr_time);
+  auto& timeline = x->link->acquireAudioTimeline(&curr_time, /*x->advance_ms*/abl_link_advance_ms);
   if (x->tempo < 0) {
     timeline.setTempo(-x->tempo, curr_time);
   }
@@ -78,9 +89,13 @@ static void abl_link_tilde_tick(t_abl_link_tilde *x) {
   x->prev_beat_time = curr_beat_time;
   x->link->releaseAudioTimeline();
 }
-
+	
 static void abl_link_tilde_set_tempo(t_abl_link_tilde *x, t_floatarg bpm) {
   x->tempo = -bpm;  // Negative values signal tempo changes.
+}
+
+static void abl_link_tilde_set_advance(t_abl_link_tilde *x, t_floatarg advance) {
+  /*x->advance_ms*/ abl_link_advance_ms = advance;
 }
 
 static void abl_link_tilde_set_resolution(t_abl_link_tilde *x,
@@ -115,6 +130,7 @@ static void *abl_link_tilde_new(t_symbol *s, int argc, t_atom *argv) {
   x->prev_beat_time = 0;
   x->quantum = 4;
   x->tempo = 0;
+  //x->advance_ms = ABL_LINK_OFFSET_MS;
   x->reset_flag = 1;
   double initial_tempo = 120.0;
   switch (argc) {
@@ -144,6 +160,7 @@ extern "C" {
 
 void abl_link_tilde_setup() {
   post("setting up abl_link~");
+  abl_link_advance_ms = ABL_LINK_OFFSET_MS;
   abl_link_tilde_class = class_new(gensym("abl_link~"),
                    (t_newmethod)abl_link_tilde_new,
                    (t_method)abl_link_tilde_free,
@@ -158,6 +175,8 @@ void abl_link_tilde_setup() {
           gensym("resolution"), A_DEFFLOAT, 0);
   class_addmethod(abl_link_tilde_class, (t_method)abl_link_tilde_reset,
           gensym("reset"), A_GIMME, 0);
+  class_addmethod(abl_link_tilde_class, (t_method)abl_link_tilde_set_advance,
+          gensym("advance"), A_DEFFLOAT, 0);
 }
 
 } //extern "C" 

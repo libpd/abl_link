@@ -10,16 +10,6 @@
 
 namespace abl_link {
 
-// Eyeball estimate for latency compensation: Pd's reported delay (5ms) plus
-// the duration of one Pd buffer (1.4ms at 44.1kHz), rounded up to the next
-// integer.
-// TODO: Come up with a more scientific way of estimating the offset.
-#ifndef ABL_LINK_OFFSET_MS
-#define ABL_LINK_OFFSET_MS 7
-#endif
-static constexpr auto kLatencyOffset =
-    std::chrono::milliseconds(ABL_LINK_OFFSET_MS);
-
 std::weak_ptr<AblLinkWrapper> AblLinkWrapper::shared_instance;
 
 AblLinkWrapper::AblLinkWrapper(double bpm) :
@@ -37,7 +27,7 @@ AblLinkWrapper::AblLinkWrapper(double bpm) :
 void AblLinkWrapper::enable(bool enabled) { link.enable(enabled); }
 
 ableton::Link::Timeline& AblLinkWrapper::acquireAudioTimeline(
-    std::chrono::microseconds *current_time) {
+    std::chrono::microseconds *current_time, double advance_ms) {
   if (invocation_count++ == 0) {
     const int n = link.numPeers();
     if (n != num_peers && num_peers_sym->s_thing) {
@@ -46,7 +36,8 @@ ableton::Link::Timeline& AblLinkWrapper::acquireAudioTimeline(
     }
     timeline = link.captureAudioTimeline();
     sample_time += DEFDACBLKSIZE;
-    curr_time = time_filter.sampleTimeToHostTime(sample_time) + kLatencyOffset;
+    curr_time = time_filter.sampleTimeToHostTime(sample_time) + 
+      std::chrono::milliseconds((long)advance_ms);
   }
   *current_time = curr_time;
   return timeline;
