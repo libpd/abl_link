@@ -35,6 +35,10 @@ AblLinkWrapper::AblLinkWrapper(double bpm) :
 
 void AblLinkWrapper::enable(bool enabled) { link.enable(enabled); }
 
+void AblLinkWrapper::set_offset(double offset_ms) {
+  latency_offset = std::chrono::microseconds((int)(offset_ms * 1000));
+}
+
 ableton::Link::Timeline& AblLinkWrapper::acquireAudioTimeline(
     std::chrono::microseconds *current_time) {
   if (invocation_count++ == 0) {

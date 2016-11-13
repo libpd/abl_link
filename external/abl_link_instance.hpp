@@ -24,6 +24,8 @@ class AblLinkWrapper {
 
   void enable(bool enabled);
 
+  void set_offset(double offset_ms);
+
   ableton::Link::Timeline&
       acquireAudioTimeline(std::chrono::microseconds *current_time);
 
