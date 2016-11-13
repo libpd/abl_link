@@ -20,7 +20,7 @@ datafiles = abl_link~-help.pd ../LICENSE
 LINK_INCLUDES ?= ./link/include
 ASIO_INCLUDES ?= ./link/modules/asio-standalone/asio/include
 
-cflags = -std=c++11 -I$(LINK_INCLUDE) \
+cflags = -std=c++11 -I$(LINK_INCLUDES) \
 	 -I$(ASIO_INCLUDES) -Wno-multichar
     
 suppress-wunused = yes
