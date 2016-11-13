@@ -17,8 +17,6 @@ namespace abl_link {
 #ifndef ABL_LINK_OFFSET_MS
 #define ABL_LINK_OFFSET_MS 7
 #endif
-static constexpr auto kLatencyOffset =
-    std::chrono::milliseconds(ABL_LINK_OFFSET_MS);
 
 std::weak_ptr<AblLinkWrapper> AblLinkWrapper::shared_instance;
 
@@ -27,6 +25,7 @@ AblLinkWrapper::AblLinkWrapper(double bpm) :
     timeline(ableton::link::Timeline(), false),
     time_filter(
         ableton::link::HostTimeFilter<ableton::link::platform::Clock>()),
+    latency_offset(ABL_LINK_OFFSET_MS * 1000),
     num_peers_sym(gensym("#abl_link_num_peers")),
     num_peers(-1),
     sample_time(0.0),
@@ -35,6 +34,10 @@ AblLinkWrapper::AblLinkWrapper(double bpm) :
 }
 
 void AblLinkWrapper::enable(bool enabled) { link.enable(enabled); }
+
+void AblLinkWrapper::set_offset(double offset_ms) {
+  latency_offset = std::chrono::microseconds((int)(offset_ms * 1000));
+}
 
 ableton::Link::Timeline& AblLinkWrapper::acquireAudioTimeline(
     std::chrono::microseconds *current_time) {
@@ -46,7 +49,7 @@ ableton::Link::Timeline& AblLinkWrapper::acquireAudioTimeline(
     }
     timeline = link.captureAudioTimeline();
     sample_time += DEFDACBLKSIZE;
-    curr_time = time_filter.sampleTimeToHostTime(sample_time) + kLatencyOffset;
+    curr_time = time_filter.sampleTimeToHostTime(sample_time) + latency_offset;
   }
   *current_time = curr_time;
   return timeline;

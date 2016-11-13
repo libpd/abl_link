@@ -88,6 +88,11 @@ static void abl_link_tilde_set_resolution(t_abl_link_tilde *x,
   x->steps_per_beat = steps_per_beat;
 }
 
+static void abl_link_tilde_set_offset(t_abl_link_tilde *x,
+    t_floatarg offset_ms) {
+  x->link->set_offset(offset_ms);
+}
+
 static void abl_link_tilde_reset(t_abl_link_tilde *x, t_symbol *s,
     int argc, t_atom *argv) {
   x->prev_beat_time = 0;
@@ -158,6 +163,8 @@ void abl_link_tilde_setup() {
           gensym("resolution"), A_DEFFLOAT, 0);
   class_addmethod(abl_link_tilde_class, (t_method)abl_link_tilde_reset,
           gensym("reset"), A_GIMME, 0);
+  class_addmethod(abl_link_tilde_class, (t_method)abl_link_tilde_set_offset,
+          gensym("offset"), A_DEFFLOAT, 0);
 }
 
 } //extern "C" 

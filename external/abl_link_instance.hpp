@@ -24,6 +24,8 @@ class AblLinkWrapper {
 
   void enable(bool enabled);
 
+  void set_offset(double offset_ms);
+
   ableton::Link::Timeline&
       acquireAudioTimeline(std::chrono::microseconds *current_time);
 
@@ -35,6 +37,7 @@ class AblLinkWrapper {
   ableton::Link link;
   ableton::Link::Timeline timeline;
   ableton::link::HostTimeFilter<ableton::link::platform::Clock> time_filter;
+  std::chrono::microseconds latency_offset;
   t_symbol *num_peers_sym;
   int num_peers;
   double sample_time;
