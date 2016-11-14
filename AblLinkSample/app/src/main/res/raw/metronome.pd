@@ -1,4 +1,4 @@
-#N canvas 612 242 351 368 10;
+#N canvas 612 242 596 387 10;
 #X obj 156 242 osc~ 440;
 #X obj 112 272 *~;
 #X obj 112 316 dac~;
@@ -22,9 +22,11 @@
 #X obj 119 142 t b f;
 #X obj 93 41 r tempo;
 #X obj 156 41 r resolution;
-#X obj 253 42 r quantum;
+#X obj 253 41 r quantum;
 #X obj 18 40 r connect;
 #X obj 230 134 s tempoOut;
+#X msg 327 62 offset \$1;
+#X obj 327 41 r offset;
 #X connect 0 0 1 1;
 #X connect 1 0 5 0;
 #X connect 3 0 1 0;
@@ -51,3 +53,5 @@
 #X connect 20 0 7 0;
 #X connect 21 0 8 0;
 #X connect 22 0 15 0;
+#X connect 24 0 10 0;
+#X connect 25 0 24 0;
