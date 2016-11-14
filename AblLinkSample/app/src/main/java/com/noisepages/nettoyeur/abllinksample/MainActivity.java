@@ -35,6 +35,7 @@ import java.io.InputStream;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "AblLinkSample";
+    static final int PD_LATENCY_MS = 7; // Latency values shouldn't go below this
 
     private TextView tempoLabel = null;
     private SeekBar tempoBar = null;
@@ -120,6 +121,21 @@ public class MainActivity extends AppCompatActivity {
             @Override public void onStartTrackingTouch(SeekBar seekBar) {}
             @Override public void onStopTrackingTouch(SeekBar seekBar) {}
         });
+        final TextView latencyLabel = (TextView) findViewById(R.id.offsetLabel);
+        final SeekBar latencyBar = (SeekBar) findViewById(R.id.offsetBar);
+        latencyBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int value, boolean fromUser) {
+                if (fromUser) {
+                    int toSet = PD_LATENCY_MS + value;
+                    PdBase.sendFloat("offset", (float) toSet);
+                    latencyLabel.setText("Offset: " + toSet + " ms");
+                }
+            }
+            @Override public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+        latencyBar.setProgress(23 - PD_LATENCY_MS);
     }
 
     private void initPd() {

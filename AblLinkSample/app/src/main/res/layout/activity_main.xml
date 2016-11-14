@@ -47,5 +47,17 @@
             android:progress="3"
             android:id="@+id/quantumBar" />
 
+        <TextView
+                android:text="Offset: 23 ms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/offsetLabel" />
+
+        <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="443"
+                android:id="@+id/offsetBar" />
+
     </LinearLayout>
 </RelativeLayout>
