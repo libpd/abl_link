@@ -38,14 +38,13 @@ define forWindows
   cflags += -DLINK_PLATFORM_WINDOWS=1
 endef
 
-PDLIBBUILDERDIR ?= pd-lib-builder
-include $(firstword $(wildcard $(PDLIBBUILDERDIR)/Makefile.pdlibbuilder Makefile.pdlibbuilder))
+PDLIBBUILDERDIR ?= ./
+include $(PDLIBBUILDERDIR)/Makefile.pdlibbuilder
 
 VERSION = $(shell git describe)
 
 update-pdlibbuilder:
-	git submodule update --init pd-lib-builder
-	cp pd-lib-builder/Makefile.pdlibbuilder .
+	curl https://raw.githubusercontent.com/pure-data/pd-lib-builder/master/Makefile.pdlibbuilder > ./Makefile.pdlibbuilder
 
 deken-source:
 	@rm -rf build_src
