@@ -39,4 +39,25 @@ define forWindows
 endef
 
 PDLIBBUILDERDIR ?= pd-lib-builder
-include $(PDLIBBUILDERDIR)/Makefile.pdlibbuilder
+include $(firstword $(wildcard $(PDLIBBUILDERDIR)/Makefile.pdlibbuilder Makefile.pdlibbuilder))
+
+VERSION = $(shell git describe)
+
+update-pdlibbuilder:
+	git submodule update --init pd-lib-builder
+	cp pd-lib-builder/Makefile.pdlibbuilder .
+
+deken-source:
+	@rm -rf build_src
+	@mkdir -p build_src/abl_link~
+	@cp $(abl_link~.class.sources) \
+		$(patsubst %.cpp, %.hpp, $(abl_link~.class.sources)) \
+		$(datafiles) Makefile.pdlibbuilder metronome.pd Makefile \
+			build_src/abl_link~
+	cd build_src/ ; deken upload -v $(VERSION) abl_link~
+
+deken-binary:
+	@rm -rf build
+	@make install objectsdir=./build
+	cd build/ ; deken upload -v $(VERSION) abl_link~
+    
