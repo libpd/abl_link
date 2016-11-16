@@ -6,6 +6,14 @@
 
 package com.noisepages.nettoyeur.abllinksample;
 
+import org.puredata.android.io.AudioParameters;
+import org.puredata.android.service.PdPreferences;
+import org.puredata.android.service.PdService;
+import org.puredata.core.PdBase;
+import org.puredata.core.PdListener;
+import org.puredata.core.utils.IoUtils;
+import org.puredata.core.utils.PdDispatcher;
+
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -20,17 +28,10 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.puredata.android.io.AudioParameters;
-import org.puredata.android.service.PdPreferences;
-import org.puredata.android.service.PdService;
-import org.puredata.core.PdBase;
-import org.puredata.core.PdListener;
-import org.puredata.core.utils.IoUtils;
-import org.puredata.core.utils.PdDispatcher;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView tempoLabel = null;
     private SeekBar tempoBar = null;
+    private TextView phase = null;
+    private TextView beatTime = null;
     private PdService pdService = null;
     private Toast toast = null;
 
@@ -129,13 +132,15 @@ public class MainActivity extends AppCompatActivity {
                 if (fromUser) {
                     int toSet = PD_LATENCY_MS + value;
                     PdBase.sendFloat("offset", (float) toSet);
-                    latencyLabel.setText("Offset: " + toSet + " ms");
+                    latencyLabel.setText("Offset: " + toSet + "ms");
                 }
             }
             @Override public void onStartTrackingTouch(SeekBar seekBar) {}
             @Override public void onStopTrackingTouch(SeekBar seekBar) {}
         });
         latencyBar.setProgress(23 - PD_LATENCY_MS);
+        phase = (TextView) findViewById(R.id.phase);
+        beatTime = (TextView) findViewById(R.id.beatTime);
     }
 
     private void initPd() {
@@ -148,12 +153,32 @@ public class MainActivity extends AppCompatActivity {
             patchFile = IoUtils.extractResource(in, "metronome.pd", getCacheDir());
             PdBase.openPatch(patchFile);
             dispatcher.addListener("tempoOut", new PdListener.Adapter() {
-                @Override public void receiveFloat(String source, final float x) {
+                @Override public void receiveFloat(final String source, final float x) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             tempoLabel.setText("Tempo: " + (int) (x + 0.5) + "bpm");
                             tempoBar.setProgress(tempoToProgress(x));
+                        }
+                    });
+                }
+            });
+            dispatcher.addListener("phase", new PdListener.Adapter() {
+                @Override public void receiveFloat(final String source, final float x) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            phase.setText(String.format(Locale.US, "%,.1f", x));
+                        }
+                    });
+                }
+            });
+            dispatcher.addListener("beatTime", new PdListener.Adapter() {
+                @Override public void receiveFloat(final String source, final float x) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            beatTime.setText(String.format(Locale.US, "%,.1f", x));
                         }
                     });
                 }
