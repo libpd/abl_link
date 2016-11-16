@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                 if (fromUser) {
                     int toSet = PD_LATENCY_MS + value;
                     PdBase.sendFloat("offset", (float) toSet);
-                    latencyLabel.setText("Offset: " + toSet + " ms");
+                    latencyLabel.setText("Offset: " + toSet + "ms");
                 }
             }
             @Override public void onStartTrackingTouch(SeekBar seekBar) {}

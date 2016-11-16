@@ -52,7 +52,7 @@
             android:id="@+id/quantumBar"/>
 
     <TextView
-            android:text="Offset: 23 ms"
+            android:text="Offset: 23ms"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="8dp"
