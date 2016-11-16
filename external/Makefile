@@ -38,5 +38,25 @@ define forWindows
   cflags += -DLINK_PLATFORM_WINDOWS=1
 endef
 
-PDLIBBUILDERDIR ?= pd-lib-builder
+PDLIBBUILDERDIR ?= .
 include $(PDLIBBUILDERDIR)/Makefile.pdlibbuilder
+
+VERSION = $(shell git describe)
+
+update-pdlibbuilder:
+	curl https://raw.githubusercontent.com/pure-data/pd-lib-builder/master/Makefile.pdlibbuilder > ./Makefile.pdlibbuilder
+
+deken-source:
+	@rm -rf build_src
+	@mkdir -p build_src/abl_link~
+	@cp $(abl_link~.class.sources) \
+		$(patsubst %.cpp, %.hpp, $(abl_link~.class.sources)) \
+		$(datafiles) Makefile.pdlibbuilder metronome.pd Makefile \
+			build_src/abl_link~
+	cd build_src/ ; deken upload -v $(VERSION) abl_link~
+
+deken-binary:
+	@rm -rf build
+	@make install objectsdir=./build
+	cd build/ ; deken upload -v $(VERSION) abl_link~
+    
