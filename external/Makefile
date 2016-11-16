@@ -38,7 +38,7 @@ define forWindows
   cflags += -DLINK_PLATFORM_WINDOWS=1
 endef
 
-PDLIBBUILDERDIR ?= ./
+PDLIBBUILDERDIR ?= .
 include $(PDLIBBUILDERDIR)/Makefile.pdlibbuilder
 
 VERSION = $(shell git describe)
