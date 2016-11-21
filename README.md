@@ -9,7 +9,7 @@ Users:
 * Simply install `abl_link~` from deken and check out the help patch.
 
 Developers:
-* Clone this repository recursively so you'll have all submodules: `git clone --recursive git@github.com:libpd/abl_link.git`
+* Clone this repository recursively so you'll have all submodules: `git clone --recursive https://github.com/libpd/abl_link.git`
 * Build the external by saying `make` in the `external` directory and install it like any other external.
 * Run the metronome patch in `external` to check the timing of the external against the LinkHut sample app.
 
