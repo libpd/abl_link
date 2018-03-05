@@ -22,7 +22,7 @@ std::weak_ptr<AblLinkWrapper> AblLinkWrapper::shared_instance;
 
 AblLinkWrapper::AblLinkWrapper(double bpm) :
     link(bpm),
-    timeline(ableton::link::Timeline(), false),
+    session_state(ableton::link::ApiState(), false),
     time_filter(
         ableton::link::HostTimeFilter<ableton::link::platform::Clock>()),
     latency_offset(ABL_LINK_OFFSET_MS * 1000),
@@ -30,6 +30,7 @@ AblLinkWrapper::AblLinkWrapper(double bpm) :
     num_peers(-1),
     sample_time(0.0),
     invocation_count(0) {
+  link.enableStartStopSync(true);
   post("Created new Link instance with tempo %f.", bpm);
 }
 
@@ -39,7 +40,7 @@ void AblLinkWrapper::set_offset(double offset_ms) {
   latency_offset = std::chrono::microseconds((int)(offset_ms * 1000));
 }
 
-ableton::Link::Timeline& AblLinkWrapper::acquireAudioTimeline(
+ableton::Link::SessionState& AblLinkWrapper::acquireAudioSessionState(
     std::chrono::microseconds *current_time) {
   if (invocation_count++ == 0) {
     const int n = link.numPeers();
@@ -47,17 +48,17 @@ ableton::Link::Timeline& AblLinkWrapper::acquireAudioTimeline(
       pd_float(num_peers_sym->s_thing, n);
       num_peers = n;
     }
-    timeline = link.captureAudioTimeline();
+    session_state = link.captureAudioSessionState();
     sample_time += DEFDACBLKSIZE;
     curr_time = time_filter.sampleTimeToHostTime(sample_time) + latency_offset;
   }
   *current_time = curr_time;
-  return timeline;
+  return session_state;
 }
 
-void AblLinkWrapper::releaseAudioTimeline() {
+void AblLinkWrapper::releaseAudioSessionState() {
   if (invocation_count >= shared_instance.use_count()) {
-    link.commitAudioTimeline(timeline);
+    link.commitAudioSessionState(session_state);
     invocation_count = 0;
   }
 }

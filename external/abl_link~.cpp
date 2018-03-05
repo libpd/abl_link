@@ -22,10 +22,12 @@ typedef struct _abl_link_tilde {
   t_outlet *phase_out;
   t_outlet *beat_out;
   t_outlet *tempo_out;
+  t_outlet *is_playing_out;
   double steps_per_beat;
   double prev_beat_time;
   double quantum;
   double tempo;
+  int is_playing;
   int reset_flag;
   std::shared_ptr<abl_link::AblLinkWrapper> link;
 } t_abl_link_tilde;
@@ -46,23 +48,31 @@ static void abl_link_tilde_dsp(t_abl_link_tilde *x, t_signal **sp) {
 
 static void abl_link_tilde_tick(t_abl_link_tilde *x) {
   std::chrono::microseconds curr_time;
-  auto& timeline = x->link->acquireAudioTimeline(&curr_time);
+  auto& session_state = x->link->acquireAudioSessionState(&curr_time);
+  if (x->is_playing < 0) {
+    session_state.setIsPlaying(x->is_playing + 2, curr_time);
+  }
+  const int prev_play = x->is_playing;
+  x->is_playing = session_state.isPlaying();
+  if (prev_play != x->is_playing) {
+    outlet_float(x->is_playing_out, x->is_playing);
+  }
   if (x->tempo < 0) {
-    timeline.setTempo(-x->tempo, curr_time);
+    session_state.setTempo(-x->tempo, curr_time);
   }
   const double prev_tempo = x->tempo;
-  x->tempo = timeline.tempo();
+  x->tempo = session_state.tempo();
   if (prev_tempo != x->tempo) {
     outlet_float(x->tempo_out, x->tempo);
   }
   double curr_beat_time;
   if (x->reset_flag) {
-    timeline.requestBeatAtTime(x->prev_beat_time, curr_time, x->quantum);
-    curr_beat_time = timeline.beatAtTime(curr_time, x->quantum);
+    session_state.requestBeatAtTime(x->prev_beat_time, curr_time, x->quantum);
+    curr_beat_time = session_state.beatAtTime(curr_time, x->quantum);
     x->prev_beat_time = curr_beat_time - 1e-6;
     x->reset_flag = 0;
   } else {
-    curr_beat_time = timeline.beatAtTime(curr_time, x->quantum);
+    curr_beat_time = session_state.beatAtTime(curr_time, x->quantum);
   }
   outlet_float(x->beat_out, curr_beat_time);
   const double curr_phase = fmod(curr_beat_time, x->quantum);
@@ -76,11 +86,15 @@ static void abl_link_tilde_tick(t_abl_link_tilde *x) {
     }
   }
   x->prev_beat_time = curr_beat_time;
-  x->link->releaseAudioTimeline();
+  x->link->releaseAudioSessionState();
 }
 
 static void abl_link_tilde_set_tempo(t_abl_link_tilde *x, t_floatarg bpm) {
   x->tempo = -bpm;  // Negative values signal tempo changes.
+}
+
+static void abl_link_tilde_play(t_abl_link_tilde *x, t_floatarg is_playing) {
+  x->is_playing = (is_playing != 0) - 2;
 }
 
 static void abl_link_tilde_set_resolution(t_abl_link_tilde *x,
@@ -116,10 +130,12 @@ static void *abl_link_tilde_new(t_symbol *s, int argc, t_atom *argv) {
   x->phase_out = outlet_new(&x->obj, &s_float);
   x->beat_out = outlet_new(&x->obj, &s_float);
   x->tempo_out = outlet_new(&x->obj, &s_float);
+  x->is_playing_out = outlet_new(&x->obj, &s_float);
   x->steps_per_beat = 1;
   x->prev_beat_time = 0;
   x->quantum = 4;
   x->tempo = 0;
+  x->is_playing = 2;
   x->reset_flag = 1;
   double initial_tempo = 120.0;
   switch (argc) {
@@ -157,6 +173,8 @@ void abl_link_tilde_setup() {
           gensym("dsp"), A_NULL);
   class_addmethod(abl_link_tilde_class, (t_method)abl_link_tilde_enable,
           gensym("connect"), A_DEFFLOAT, 0);
+  class_addmethod(abl_link_tilde_class, (t_method)abl_link_tilde_play,
+          gensym("play"), A_DEFFLOAT, 0);
   class_addmethod(abl_link_tilde_class, (t_method)abl_link_tilde_set_tempo,
           gensym("tempo"), A_DEFFLOAT, 0);
   class_addmethod(abl_link_tilde_class, (t_method)abl_link_tilde_set_resolution,
