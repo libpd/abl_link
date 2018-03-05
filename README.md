@@ -1,6 +1,6 @@
 # abl_link~
 
-Ableton Link integration for Pd.
+Ableton Link 3.0 integration for Pd.
 
 ## Desktop version
 
