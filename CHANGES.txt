@@ -1,20 +1,28 @@
 v0.6: 2021 May 25
 
 * updated to Link 3.0.3
-* updated to ld-lib-builder 0.6.0
+* updated to pd-lib-builder 0.6.0
 * fixed Windows build (Lucas Cordiviola)
 
 v0.5: 2020 Feb 18
 
-abl_link~ accepts an [offset( message that allows users to improve synchronization on platforms that don't report their latency. This message has been around for a long time, but it was undocumented because the Link specification frowns upon exposed configuration settings. In practice, however, this feature is hard to avoid, and so we make it official by documenting it.
+abl_link~ accepts an [offset( message that allows users to improve
+synchronization on platforms that don't report their latency. This message has
+been around for a long time, but it was undocumented because the Link
+specification frowns upon exposed configuration settings. In practice, however,
+this feature is hard to avoid, and so we make it official by documenting it.
 
 v0.4: 2018 Mar 05
 
-This release updates the code of abl_link~ so that it builds with Link 3.0, and it adds support for setting and receiving the play state of the Link session; see help patch for details.
+This release updates the code of abl_link~ so that it builds with Link 3.0, and
+it adds support for setting and receiving the play state of the Link session;
+see help patch for details.
 
 v0.3: 2016 Nov 16
 
-Moved to GitHub and integrated dependencies as submodules. Various build improvements. Added latency handling & internal offset message. Improved help files. Now using 3-clause BSD license.
+Moved to GitHub and integrated dependencies as submodules. Various build
+improvements. Added latency handling & internal offset message. Improved help
+files. Now using 3-clause BSD license.
 
 v0.2: 2016 Oct
 
