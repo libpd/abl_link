@@ -15,7 +15,7 @@ lib.name = abl_link~
 abl_link~.class.sources = abl_link~.cpp abl_link_instance.cpp
 
 # all extra files to be included in binary distribution of the library
-datafiles = abl_link~-help.pd ../LICENSE
+datafiles = abl_link~-help.pd ../LICENSE metronome.pd
 
 LINK_INCLUDES ?= ./link/include
 ASIO_INCLUDES ?= ./link/modules/asio-standalone/asio/include
@@ -33,9 +33,10 @@ define forDarwin
   cflags += -DLINK_PLATFORM_MACOSX=1 -mmacosx-version-min=10.9
 endef
 
-# TODO: Windows build untested
+
 define forWindows
   cflags += -DLINK_PLATFORM_WINDOWS=1
+  ldlibs += -lws2_32 -liphlpapi -static -lpthread
 endef
 
 PDLIBBUILDERDIR ?= .
