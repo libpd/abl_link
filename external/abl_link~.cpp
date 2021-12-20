@@ -185,5 +185,4 @@ void abl_link_tilde_setup() {
           gensym("offset"), A_DEFFLOAT, 0);
 }
 
-} //extern "C" 
-
+} //extern "C"
