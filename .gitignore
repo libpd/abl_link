@@ -10,3 +10,4 @@ captures
 *.so
 *.dylib
 *.pd_darwin
+AblLinkSample/app/.cxx

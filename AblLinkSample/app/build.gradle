@@ -5,14 +5,10 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     defaultConfig {
         applicationId "com.noisepages.nettoyeur.abllinksample"
-        minSdkVersion 10
-        targetSdkVersion 25
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        ndk {
-            abiFilters 'x86', 'armeabi', 'armeabi-v7a'
-        }
     }
     buildTypes {
         release {
@@ -28,10 +24,7 @@ android {
 }
 
 dependencies {
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'com.android.support:appcompat-v7:25.0.0'
-    compile project(':PdCore')
-    testCompile 'junit:junit:4.12'
+    implementation project(':PdCore')
+    implementation 'com.google.android.material:material:1.6.0'
+    implementation 'androidx.activity:activity:1.4.0'
 }

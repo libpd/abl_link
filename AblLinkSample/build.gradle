@@ -2,21 +2,19 @@
 
 buildscript {
     repositories {
-        jcenter()
+        google()
+        mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.1'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath 'com.android.tools.build:gradle:7.2.0'
     }
 }
 
 allprojects {
     repositories {
-        jcenter()
+        google()
+        mavenCentral()
+        jcenter() // FIXME: com.noisepages.nettoyeur:midi
     }
 }
 
@@ -25,6 +23,9 @@ task clean(type: Delete) {
 }
 
 ext {
-    compileSdkVersion = 25
-    buildToolsVersion = '25.0.0'
+    minSdkVersion = 17
+    compileSdkVersion = 32
+    buildToolsVersion = '32.0.0'
+    androidxLegacySupportVersion = '1.0.0'
+    ndkVersion = '21.4.7075529' // https://developer.android.com/ndk/downloads#lts-downloads
 }
