@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.6)
 
-set(PD_CORE ${CMAKE_CURRENT_LIST_DIR}/../../pd-for-android/PdCore)
+set(PD_CORE ${CMAKE_CURRENT_LIST_DIR}/../../pd-for-android/PdCore/src/main)
 
 add_library(pd SHARED IMPORTED)
 set_target_properties(pd PROPERTIES IMPORTED_LOCATION

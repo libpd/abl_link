@@ -19,4 +19,5 @@
         <service android:name="org.puredata.android.service.PdService"/>
     </application>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 </manifest>
