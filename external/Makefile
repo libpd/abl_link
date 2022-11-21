@@ -39,8 +39,8 @@ define forWindows
   ldlibs += -lws2_32 -liphlpapi -static -lpthread
 endef
 
-PDLIBBUILDERDIR ?= .
-include $(PDLIBBUILDERDIR)/Makefile.pdlibbuilder
+PDLIBBUILDER_DIR ?= .
+include $(PDLIBBUILDER_DIR)/Makefile.pdlibbuilder
 
 VERSION = $(shell git describe)
 
