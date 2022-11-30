@@ -113,7 +113,7 @@ static void abl_link_tilde_reset(t_abl_link_tilde *x, t_symbol *s,
   x->reset_flag = 1;
   switch (argc) {
     default:
-      error("abl_link~ reset: Unexpected number of parameters: %d", argc);
+      pd_error(x, "abl_link~ reset: Unexpected number of parameters: %d", argc);
     case 2:
       x->quantum = atom_getfloat(argv + 1);
     case 1:
@@ -140,7 +140,7 @@ static void *abl_link_tilde_new(t_symbol *s, int argc, t_atom *argv) {
   double initial_tempo = 120.0;
   switch (argc) {
     default:
-      error("abl_link~: Unexpected number of creation args: %d", argc);
+      pd_error(x, "abl_link~: Unexpected number of creation args: %d", argc);
     case 4:
       initial_tempo = atom_getfloat(argv + 3);
     case 3:
